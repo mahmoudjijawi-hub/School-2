@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="app-layout">
+    <!-- الشريط الجانبي -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="logo-icon">م</span>
+            <span class="logo-text">نظام المعاهد</span>
+        </div>
+        <nav class="sidebar-nav">
+            {% block sidebar_nav %}{% endblock %}
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="nav-link logout-link">
+                <span class="nav-icon">⎋</span>
+                <span>تسجيل خروج</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- الشريط العلوي -->
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button>
+            <form class="search-box" method="get" action="{% block search_action %}{% endblock %}">
+                {% include 'partials/session_fields.html' %}
+                <input type="search" name="q" value="{{ q|default:'' }}" placeholder="بحث..." class="search-input">
+            </form>
+            <div class="topbar-actions">
+                <button class="icon-btn" id="themeToggle" aria-label="تبديل الوضع">🌙</button>
+                <div class="user-avatar" title="{{ display_name }}">
+                    {{ display_name|first|default:"م" }}
+                </div>
+            </div>
+        </header>
+
+        <!-- رسائل -->
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- محتوى الصفحة -->
+        <main class="page-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<!-- خلفية القائمة على الموبايل -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+{% endblock %}

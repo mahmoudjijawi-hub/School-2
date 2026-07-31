@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}دخول المدير - نظام المعاهد{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block body %}
+<div class="auth-bg">
+    <div class="dots dots-tl"></div>
+    <div class="dots dots-br"></div>
+    <div class="auth-card">
+        <div class="auth-logo">
+            <span class="logo-icon">م</span>
+            <h1>دخول المدير</h1>
+            <p>أدخل اسم المستخدم وكلمة المرور</p>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" class="auth-form" action="{{ form_action }}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">{{ form.username.label }}</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="id_password">{{ form.password.label }}</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">تسجيل الدخول</button>
+            <a href="{% url 'home' %}" class="btn btn-ghost btn-block">رجوع</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

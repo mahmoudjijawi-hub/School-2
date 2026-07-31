@@ -1,0 +1,57 @@
+{% extends 'layouts/dashboard.html' %}
+{% block title %}لوحة الأستاذ - نظام المعاهد{% endblock %}
+
+{% block sidebar_nav %}
+<div class="nav-group">
+    <span class="nav-group-title">الأستاذ</span>
+    <a href="{% url 'teacher_dashboard' %}{{ query_suffix }}" class="nav-link active">
+        <span class="nav-icon">◉</span><span>لوحتي</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">لوحة الأستاذ</h1>
+
+<div class="card">
+    <h2 class="card-title">بياناتي</h2>
+    <div class="info-grid">
+        <div class="info-item"><span class="info-label">الاسم</span><span>{{ teacher.name }}</span></div>
+        <div class="info-item"><span class="info-label">المادة</span><span>{{ teacher.subject }}</span></div>
+        <div class="info-item"><span class="info-label">الرقم المميز</span><span>{{ teacher.special_number }}</span></div>
+        <div class="info-item"><span class="info-label">الهاتف</span><span>{{ teacher.phone }}</span></div>
+    </div>
+</div>
+
+<div class="card table-card">
+    <h2 class="card-title">برنامجي الدراسي</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>اليوم</th>
+                    <th>المرحلة</th>
+                    <th>الشعبة</th>
+                    <th>المادة</th>
+                    <th>القاعة</th>
+                    <th>الساعة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in schedules %}
+                <tr>
+                    <td>{{ s.get_day_display }}</td>
+                    <td>{{ s.get_grade_level_display }}</td>
+                    <td>{{ s.get_section_display }}</td>
+                    <td>{{ s.subject }}</td>
+                    <td>{{ s.room }}</td>
+                    <td>{{ s.time|time:"H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="empty-state">لا توجد حصص</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

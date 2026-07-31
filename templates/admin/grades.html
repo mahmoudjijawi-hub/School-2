@@ -1,0 +1,63 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}العلامات - نظام المعاهد{% endblock %}
+
+{% block content %}
+<h1 class="page-title">العلامات</h1>
+
+<div class="card">
+    <h2 class="card-title">تسجيل علامة</h2>
+    <form method="post" class="form-grid" action="{{ form_action }}">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">تسجيل</button>
+        </div>
+    </form>
+</div>
+
+<div class="filters-bar">
+    <form method="get" class="filters-form">
+        {% include 'partials/session_fields.html' %}
+        <div class="form-group">
+            <label>الشعبة</label>
+            {{ filter_form.section }}
+        </div>
+    </form>
+</div>
+
+<div class="card table-card">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>المذاكرة</th>
+                    <th>التاريخ</th>
+                    <th>الشعبة</th>
+                    <th>الطالب</th>
+                    <th>العلامة</th>
+                    <th>ملاحظة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in grades %}
+                <tr>
+                    <td>{{ g.exam_name }}</td>
+                    <td>{{ g.date }}</td>
+                    <td>{{ g.get_section_display }}</td>
+                    <td>{{ g.student.name }}</td>
+                    <td><span class="pill">{{ g.score }}</span></td>
+                    <td>{{ g.note|default:"—" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="empty-state">لا توجد علامات</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
