@@ -16,11 +16,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-demo-key-change-in-production')
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-    if host.strip()
-]
+# في وضع التطوير نسمح بكل المضيفين لتسهيل الاختبار عبر Cursor/Render
+if DEBUG and os.environ.get('ALLOW_ALL_HOSTS', 'true').lower() in ('true', '1', 'yes'):
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = [
+        host.strip()
+        for host in os.environ.get(
+            'ALLOWED_HOSTS',
+            'localhost,127.0.0.1,.onrender.com,.cursorvm.com',
+        ).split(',')
+        if host.strip()
+    ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
