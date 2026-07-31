@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}تسجيل الدخول - نظام المعاهد{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block body %}
+<div class="auth-bg">
+    <div class="dots dots-tl"></div>
+    <div class="dots dots-br"></div>
+    <div class="auth-card">
+        <div class="auth-logo">
+            <span class="logo-icon">م</span>
+            <h1>نظام المعاهد</h1>
+            <p>أدخل الرقم المميز للدخول</p>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_special_number">{{ form.special_number.label }}</label>
+                {{ form.special_number }}
+                {% if form.special_number.errors %}
+                <span class="field-error">{{ form.special_number.errors.0 }}</span>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">دخول</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

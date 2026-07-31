@@ -1,0 +1,132 @@
+{% extends 'layouts/dashboard.html' %}
+{% block title %}لوحة الطالب - نظام المعاهد{% endblock %}
+
+{% block sidebar_nav %}
+<div class="nav-group">
+    <span class="nav-group-title">الطالب</span>
+    <a href="{% url 'student_dashboard' %}" class="nav-link active">
+        <span class="nav-icon">◉</span><span>لوحتي</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">لوحة الطالب</h1>
+
+<div class="card">
+    <h2 class="card-title">بياناتي</h2>
+    <div class="info-grid">
+        <div class="info-item"><span class="info-label">الاسم</span><span>{{ student.name }}</span></div>
+        <div class="info-item"><span class="info-label">المرحلة</span><span>{{ student.get_grade_level_display }}</span></div>
+        <div class="info-item"><span class="info-label">الشعبة</span><span>{{ student.get_section_display }}</span></div>
+        <div class="info-item"><span class="info-label">الرقم المميز</span><span>{{ student.special_number }}</span></div>
+    </div>
+</div>
+
+<div class="card table-card">
+    <h2 class="card-title">برنامجي الدراسي</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>اليوم</th>
+                    <th>المادة</th>
+                    <th>الأستاذ</th>
+                    <th>القاعة</th>
+                    <th>الساعة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in schedules %}
+                <tr>
+                    <td>{{ s.get_day_display }}</td>
+                    <td>{{ s.subject }}</td>
+                    <td>{{ s.teacher.name }}</td>
+                    <td>{{ s.room }}</td>
+                    <td>{{ s.time|time:"H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="empty-state">لا توجد حصص</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card table-card">
+    <h2 class="card-title">علاماتي</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>المذاكرة</th>
+                    <th>التاريخ</th>
+                    <th>العلامة</th>
+                    <th>ملاحظة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in grades %}
+                <tr>
+                    <td>{{ g.exam_name }}</td>
+                    <td>{{ g.date }}</td>
+                    <td><span class="pill">{{ g.score }}</span></td>
+                    <td>{{ g.note|default:"—" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="empty-state">لا توجد علامات</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card table-card">
+    <h2 class="card-title">سجل حضوري</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in attendances %}
+                <tr>
+                    <td>{{ a.date }}</td>
+                    <td>
+                        {% if a.status == 'present' %}
+                        <span class="badge badge-success">حاضر</span>
+                        {% else %}
+                        <span class="badge badge-danger">غائب</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="2" class="empty-state">لا توجد سجلات</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <h2 class="card-title">حالة دفعاتي</h2>
+    {% for payment in payments %}
+    <div class="payment-item">
+        <div class="pills">
+            <span class="pill">{{ payment.get_payment_type_display }}</span>
+            <span class="pill {% if payment.status == 'completed' %}pill-success{% endif %}">{{ payment.get_status_display }}</span>
+        </div>
+        <p>الكلي: {{ payment.total_amount }} | المدفوع: {{ payment.paid_amount }} | المتبقي: {{ payment.remaining }}</p>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ payment.progress_percent }}%"></div>
+        </div>
+        <span class="progress-label">{{ payment.progress_percent }}%</span>
+    </div>
+    {% empty %}
+    <div class="empty-state">لا توجد مدفوعات</div>
+    {% endfor %}
+</div>
+{% endblock %}

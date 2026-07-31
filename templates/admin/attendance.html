@@ -1,0 +1,64 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}الحضور والغياب - نظام المعاهد{% endblock %}
+
+{% block content %}
+<h1 class="page-title">الحضور والغياب</h1>
+
+<div class="card">
+    <h2 class="card-title">تسجيل حضور/غياب</h2>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">تسجيل</button>
+        </div>
+    </form>
+</div>
+
+<div class="filters-bar">
+    <form method="get" class="filters-form">
+        <div class="form-group">
+            <label>الشعبة</label>
+            {{ filter_form.section }}
+        </div>
+    </form>
+</div>
+
+<div class="card table-card">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>الشعبة</th>
+                    <th>الطالب</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in attendances %}
+                <tr>
+                    <td>{{ a.date }}</td>
+                    <td>{{ a.get_section_display }}</td>
+                    <td>{{ a.student.name }}</td>
+                    <td>
+                        {% if a.status == 'present' %}
+                        <span class="badge badge-success">حاضر</span>
+                        {% else %}
+                        <span class="badge badge-danger">غائب</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="empty-state">لا توجد سجلات</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}المدفوعات - نظام المعاهد{% endblock %}
+
+{% block content %}
+<h1 class="page-title">المدفوعات</h1>
+
+<div class="card">
+    <h2 class="card-title">تسجيل دفعة جديدة</h2>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">تسجيل</button>
+        </div>
+    </form>
+</div>
+
+{% if selected_payment %}
+<div class="card">
+    <h2 class="card-title">إضافة دفعة على حساب {{ selected_payment.student.name }}</h2>
+    <p>المدفوع: {{ selected_payment.paid_amount }} / {{ selected_payment.total_amount }}</p>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <input type="hidden" name="payment_id" value="{{ selected_payment.pk }}">
+        <div class="form-group">
+            <label>{{ add_form.amount.label }}</label>
+            {{ add_form.amount }}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">إضافة</button>
+            <a href="{% url 'admin_payments' %}" class="btn btn-ghost">إلغاء</a>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+<div class="cards-grid">
+    {% for payment in payments %}
+    <div class="card item-card">
+        <h3 class="card-title">{{ payment.student.name }}</h3>
+        <div class="pills">
+            <span class="pill">{{ payment.get_payment_type_display }}</span>
+            <span class="pill {% if payment.status == 'completed' %}pill-success{% endif %}">{{ payment.get_status_display }}</span>
+        </div>
+        <p class="card-desc">الكلي: {{ payment.total_amount }} | المدفوع: {{ payment.paid_amount }} | المتبقي: {{ payment.remaining }}</p>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ payment.progress_percent }}%"></div>
+        </div>
+        <span class="progress-label">{{ payment.progress_percent }}%</span>
+        {% if payment.status != 'completed' %}
+        <div class="card-actions">
+            <a href="?add_to={{ payment.pk }}" class="btn btn-primary btn-sm">إضافة دفعة</a>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="empty-state">لا توجد مدفوعات</div>
+    {% endfor %}
+</div>
+{% endblock %}

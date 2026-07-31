@@ -1,0 +1,71 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}الطلاب - نظام المعاهد{% endblock %}
+{% block search_action %}{% url 'admin_students' %}{% endblock %}
+
+{% block content %}
+<h1 class="page-title">الطلاب</h1>
+
+<div class="card">
+    <h2 class="card-title">{% if edit_student %}تعديل طالب{% else %}إضافة طالب جديد{% endif %}</h2>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        {% if edit_student %}<input type="hidden" name="edit_id" value="{{ edit_student.pk }}">{% endif %}
+        {% for field in form %}
+        <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<span class="field-error">{{ field.errors.0 }}</span>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{% if edit_student %}حفظ التعديل{% else %}إضافة{% endif %}</button>
+            {% if edit_student %}<a href="{% url 'admin_students' %}" class="btn btn-ghost">إلغاء</a>{% endif %}
+        </div>
+    </form>
+</div>
+
+<div class="filters-bar">
+    <form method="get" class="filters-form">
+        <input type="hidden" name="q" value="{{ q }}">
+        <div class="form-group">
+            <label>المرحلة</label>
+            {{ filter_form.grade_level }}
+        </div>
+    </form>
+</div>
+
+<div class="cards-grid">
+    {% for student in students %}
+    <div class="card item-card">
+        <h3 class="card-title">{{ student.name }}</h3>
+        <p class="card-desc">الرقم المميز: {{ student.special_number }}</p>
+        <div class="pills">
+            <span class="pill">{{ student.get_grade_level_display }}</span>
+            <span class="pill">شعبة {{ student.get_section_display }}</span>
+        </div>
+        <p class="card-meta">📞 {{ student.student_phone }} | ولي الأمر: {{ student.parent_phone }}</p>
+        <div class="card-actions">
+            <a href="?edit={{ student.pk }}" class="btn btn-ghost btn-sm">تعديل</a>
+            <form method="post" action="{% url 'admin_student_delete' student.pk %}" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">لا يوجد طلاب</div>
+    {% endfor %}
+</div>
+
+{% if students.has_other_pages %}
+<div class="pagination">
+    {% if students.has_previous %}
+    <a href="?page={{ students.previous_page_number }}&q={{ q }}&grade_level={{ request.GET.grade_level }}" class="btn btn-ghost btn-sm">السابق</a>
+    {% endif %}
+    <span class="page-info">صفحة {{ students.number }} من {{ students.paginator.num_pages }}</span>
+    {% if students.has_next %}
+    <a href="?page={{ students.next_page_number }}&q={{ q }}&grade_level={{ request.GET.grade_level }}" class="btn btn-ghost btn-sm">التالي</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
