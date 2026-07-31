@@ -7,7 +7,7 @@
 
 <div class="card">
     <h2 class="card-title">إضافة أستاذ جديد</h2>
-    <form method="post" enctype="multipart/form-data" class="form-grid">
+    <form method="post" enctype="multipart/form-data" class="form-grid" action="{{ form_action }}">
         {% csrf_token %}
         {% for field in form %}
         <div class="form-group">
@@ -42,7 +42,7 @@
             <span class="pill">{{ teacher.subject }}</span>
         </div>
         <p class="card-meta">📞 {{ teacher.phone }}</p>
-        <form method="post" action="{% url 'admin_teacher_delete' teacher.pk %}" class="card-actions" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+        <form method="post" action="{% url 'admin_teacher_delete' teacher.pk %}{{ query_suffix }}" class="card-actions" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger btn-sm">حذف</button>
         </form>

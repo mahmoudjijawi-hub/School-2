@@ -47,6 +47,16 @@ CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(_env_csrf_origins + _DEFAULT_CSRF_ORIG
 # خلف بروكسي HTTPS (Cursor/Render)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# إعدادات الكوكيز لبيئة Cursor (iframe + HTTPS)
+# المتصفح يحجب كوكيز CSRF بدون SameSite=None; Secure في هذا السياق
+CURSOR_DEV = os.environ.get('CURSOR_DEV', 'true').lower() in ('true', '1', 'yes')
+if DEBUG and CURSOR_DEV:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SAMESITE = 'None'
+    CSRF_USE_SESSIONS = True
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -62,6 +72,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'core.middleware.CursorDevCsrfMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -81,6 +92,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.user_display',
+                'core.context_processors.request_helpers',
             ],
         },
     },

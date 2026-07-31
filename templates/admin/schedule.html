@@ -6,7 +6,7 @@
 
 <div class="card">
     <h2 class="card-title">إضافة حصة</h2>
-    <form method="post" class="form-grid">
+    <form method="post" class="form-grid" action="{{ form_action }}">
         {% csrf_token %}
         {% for field in form %}
         <div class="form-group">

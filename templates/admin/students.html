@@ -7,7 +7,7 @@
 
 <div class="card">
     <h2 class="card-title">{% if edit_student %}تعديل طالب{% else %}إضافة طالب جديد{% endif %}</h2>
-    <form method="post" class="form-grid">
+    <form method="post" class="form-grid" action="{{ form_action }}">
         {% csrf_token %}
         {% if edit_student %}<input type="hidden" name="edit_id" value="{{ edit_student.pk }}">{% endif %}
         {% for field in form %}
@@ -46,7 +46,7 @@
         <p class="card-meta">📞 {{ student.student_phone }} | ولي الأمر: {{ student.parent_phone }}</p>
         <div class="card-actions">
             <a href="?edit={{ student.pk }}" class="btn btn-ghost btn-sm">تعديل</a>
-            <form method="post" action="{% url 'admin_student_delete' student.pk %}" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+            <form method="post" action="{% url 'admin_student_delete' student.pk %}{{ query_suffix }}" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger btn-sm">حذف</button>
             </form>

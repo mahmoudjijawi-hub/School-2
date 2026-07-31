@@ -19,7 +19,7 @@
         {% endfor %}
         {% endif %}
 
-        <form method="post" class="auth-form">
+        <form method="post" class="auth-form" action="{{ form_action }}">
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_username">{{ form.username.label }}</label>

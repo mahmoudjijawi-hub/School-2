@@ -6,7 +6,7 @@
 
 <div class="card">
     <h2 class="card-title">تسجيل دفعة جديدة</h2>
-    <form method="post" class="form-grid">
+    <form method="post" class="form-grid" action="{{ form_action }}">
         {% csrf_token %}
         {% for field in form %}
         <div class="form-group">
@@ -24,7 +24,7 @@
 <div class="card">
     <h2 class="card-title">إضافة دفعة على حساب {{ selected_payment.student.name }}</h2>
     <p>المدفوع: {{ selected_payment.paid_amount }} / {{ selected_payment.total_amount }}</p>
-    <form method="post" class="form-grid">
+    <form method="post" class="form-grid" action="{{ form_action }}">
         {% csrf_token %}
         <input type="hidden" name="payment_id" value="{{ selected_payment.pk }}">
         <div class="form-group">

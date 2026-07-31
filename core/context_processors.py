@@ -14,3 +14,12 @@ def user_display(request):
         'display_name': display_name,
         'user_role': role,
     }
+
+
+def request_helpers(request):
+    """مساعدات للقوالب (مثل الحفاظ على query string للبروكسي)."""
+    qs = request.META.get('QUERY_STRING', '')
+    return {
+        'query_suffix': f'?{qs}' if qs else '',
+        'form_action': request.get_full_path(),
+    }
