@@ -29,6 +29,24 @@ else:
         if host.strip()
     ]
 
+# مصادر موثوقة لـ CSRF (مطلوب عند الوصول عبر Cursor/Render بـ HTTPS)
+_DEFAULT_CSRF_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://*.onrender.com',
+    'https://*.cursorvm.com',
+    'https://*.agent.cvm.dev',
+]
+_env_csrf_origins = [
+    origin.strip()
+    for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+    if origin.strip()
+]
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(_env_csrf_origins + _DEFAULT_CSRF_ORIGINS))
+
+# خلف بروكسي HTTPS (Cursor/Render)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
