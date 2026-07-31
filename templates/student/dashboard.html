@@ -4,7 +4,7 @@
 {% block sidebar_nav %}
 <div class="nav-group">
     <span class="nav-group-title">الطالب</span>
-    <a href="{% url 'student_dashboard' %}" class="nav-link active">
+    <a href="{% url 'student_dashboard' %}{{ query_suffix }}" class="nav-link active">
         <span class="nav-icon">◉</span><span>لوحتي</span>
     </a>
 </div>

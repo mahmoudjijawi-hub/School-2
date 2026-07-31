@@ -22,6 +22,7 @@
 
 <div class="filters-bar">
     <form method="get" class="filters-form">
+        {% include 'partials/session_fields.html' %}
         <div class="form-group">
             <label>الشعبة</label>
             {{ filter_form.section }}

@@ -6,6 +6,7 @@
 
 <div class="filters-bar">
     <form method="get" class="filters-form">
+        {% include 'partials/session_fields.html' %}
         <div class="form-group">
             <label>اسم الأستاذ</label>
             <input type="text" name="teacher_name" value="{{ teacher_name }}" class="form-input" placeholder="ابحث باسم الأستاذ">

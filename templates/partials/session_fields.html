@@ -1,0 +1,5 @@
+{% if session_params %}
+{% for key, value in session_params.items %}
+<input type="hidden" name="{{ key }}" value="{{ value }}">
+{% endfor %}
+{% endif %}

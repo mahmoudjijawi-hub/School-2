@@ -25,6 +25,7 @@
         <header class="topbar">
             <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button>
             <form class="search-box" method="get" action="{% block search_action %}{% endblock %}">
+                {% include 'partials/session_fields.html' %}
                 <input type="search" name="q" value="{{ q|default:'' }}" placeholder="بحث..." class="search-input">
             </form>
             <div class="topbar-actions">

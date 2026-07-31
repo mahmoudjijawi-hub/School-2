@@ -1,6 +1,7 @@
 {% extends 'admin/base_admin.html' %}
+{% load query_tags %}
 {% block title %}الطلاب - نظام المعاهد{% endblock %}
-{% block search_action %}{% url 'admin_students' %}{% endblock %}
+{% block search_action %}{% url 'admin_students' %}{{ query_suffix }}{% endblock %}
 
 {% block content %}
 <h1 class="page-title">الطلاب</h1>
@@ -19,7 +20,7 @@
         {% endfor %}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{% if edit_student %}حفظ التعديل{% else %}إضافة{% endif %}</button>
-            {% if edit_student %}<a href="{% url 'admin_students' %}" class="btn btn-ghost">إلغاء</a>{% endif %}
+            {% if edit_student %}<a href="{% url 'admin_students' %}{{ query_suffix }}" class="btn btn-ghost">إلغاء</a>{% endif %}
         </div>
     </form>
 </div>
@@ -27,6 +28,7 @@
 <div class="filters-bar">
     <form method="get" class="filters-form">
         <input type="hidden" name="q" value="{{ q }}">
+        {% include 'partials/session_fields.html' %}
         <div class="form-group">
             <label>المرحلة</label>
             {{ filter_form.grade_level }}
@@ -45,7 +47,7 @@
         </div>
         <p class="card-meta">📞 {{ student.student_phone }} | ولي الأمر: {{ student.parent_phone }}</p>
         <div class="card-actions">
-            <a href="?edit={{ student.pk }}" class="btn btn-ghost btn-sm">تعديل</a>
+            <a href="{% qurl edit=student.pk %}" class="btn btn-ghost btn-sm">تعديل</a>
             <form method="post" action="{% url 'admin_student_delete' student.pk %}{{ query_suffix }}" onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger btn-sm">حذف</button>
@@ -60,11 +62,11 @@
 {% if students.has_other_pages %}
 <div class="pagination">
     {% if students.has_previous %}
-    <a href="?page={{ students.previous_page_number }}&q={{ q }}&grade_level={{ request.GET.grade_level }}" class="btn btn-ghost btn-sm">السابق</a>
+    <a href="{% qurl page=students.previous_page_number q=q grade_level=request.GET.grade_level %}" class="btn btn-ghost btn-sm">السابق</a>
     {% endif %}
     <span class="page-info">صفحة {{ students.number }} من {{ students.paginator.num_pages }}</span>
     {% if students.has_next %}
-    <a href="?page={{ students.next_page_number }}&q={{ q }}&grade_level={{ request.GET.grade_level }}" class="btn btn-ghost btn-sm">التالي</a>
+    <a href="{% qurl page=students.next_page_number q=q grade_level=request.GET.grade_level %}" class="btn btn-ghost btn-sm">التالي</a>
     {% endif %}
 </div>
 {% endif %}

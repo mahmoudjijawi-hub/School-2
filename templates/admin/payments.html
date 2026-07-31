@@ -1,4 +1,5 @@
 {% extends 'admin/base_admin.html' %}
+{% load query_tags %}
 {% block title %}المدفوعات - نظام المعاهد{% endblock %}
 
 {% block content %}
@@ -33,7 +34,7 @@
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">إضافة</button>
-            <a href="{% url 'admin_payments' %}" class="btn btn-ghost">إلغاء</a>
+            <a href="{% url 'admin_payments' %}{{ query_suffix }}" class="btn btn-ghost">إلغاء</a>
         </div>
     </form>
 </div>
@@ -54,7 +55,7 @@
         <span class="progress-label">{{ payment.progress_percent }}%</span>
         {% if payment.status != 'completed' %}
         <div class="card-actions">
-            <a href="?add_to={{ payment.pk }}" class="btn btn-primary btn-sm">إضافة دفعة</a>
+            <a href="{% qurl add_to=payment.pk %}" class="btn btn-primary btn-sm">إضافة دفعة</a>
         </div>
         {% endif %}
     </div>
